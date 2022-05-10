@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "Fpwyt9O7J+KkfATnnq/rfyouxLHNJqxnHAdGQ0FRiv0/oLaKFYDubu3q3Sy6xqu4q5UIBnLtaAAJ3gHk/OGZkA==",
+  "success": true,
+  "projectFilePath": "D:\\NoodleAssignment\\NoodleAssignment\\Noodle_Assignment_API\\Noodle_Assignment_API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\TAPAN\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "C:\\Users\\TAPAN\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\TAPAN\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
+    "C:\\Users\\TAPAN\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
+    "C:\\Users\\TAPAN\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.2.3\\swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",
+    "C:\\Users\\TAPAN\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.2.3\\swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512"
+  ],
+  "logs": []
+}
