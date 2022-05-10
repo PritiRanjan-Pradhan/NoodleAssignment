@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Noodle_Assignment_API.Services;
-
+﻿
 namespace Noodle_Assignment_API.Controllers
 {
     [Route("api/[controller]")]

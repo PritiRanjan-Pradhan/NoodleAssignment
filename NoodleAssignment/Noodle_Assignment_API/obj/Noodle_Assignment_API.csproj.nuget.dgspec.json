@@ -43,6 +43,14 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"
+            },
+            "commercetools.Sdk.Api": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
+            "commercetools.Sdk.ImportApi": {
+              "target": "Package",
+              "version": "[3.1.0, )"
             }
           },
           "imports": [

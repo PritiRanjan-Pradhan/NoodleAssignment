@@ -25,3 +25,11 @@ D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\obj\Debug\net6.0\refi
 D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\obj\Debug\net6.0\Noodle_Assignment_API.pdb
 D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\obj\Debug\net6.0\Noodle_Assignment_API.genruntimeconfig.cache
 D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\obj\Debug\net6.0\ref\Noodle_Assignment_API.dll
+D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\bin\Debug\net6.0\commercetools.Base.Abstractions.dll
+D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\bin\Debug\net6.0\commercetools.Base.Client.dll
+D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\bin\Debug\net6.0\commercetools.Base.Registration.dll
+D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\bin\Debug\net6.0\commercetools.Base.Serialization.dll
+D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\bin\Debug\net6.0\commercetools.Sdk.Api.dll
+D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\bin\Debug\net6.0\commercetools.Sdk.ImportApi.dll
+D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\bin\Debug\net6.0\JsonSubTypes.dll
+D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\bin\Debug\net6.0\Newtonsoft.Json.dll
