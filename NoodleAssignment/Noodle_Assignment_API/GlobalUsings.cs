@@ -9,3 +9,7 @@ global using Microsoft.AspNetCore.Mvc;
 global using Noodle_Assignment_API.Extension;
 global using Noodle_Assignment_API.Interfaces;
 global using Noodle_Assignment_API.Services;
+global using commercetools.Sdk.Api.Models.States;
+global using Noodle_Assignment_API.Model;
+
+

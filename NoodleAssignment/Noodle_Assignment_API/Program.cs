@@ -7,7 +7,10 @@ builder.Services.UseCommercetoolsApi(builder.Configuration,
 builder.Services.AddScoped<IHelloWorldService, HelloWorldService>();
 builder.Services.AddScoped<IDummyExcercise, DummyExcercise>();
 builder.Services.AddScoped<ICreateService, CreateService>();
-
+builder.Services.AddScoped<IUpdateGroupService, UpdateGroupService>();
+builder.Services.AddScoped<IImportApiService,ImportAPIService>();
+builder.Services.AddScoped<IStateMachineService, StateMachineService>();
+builder.Services.AddScoped<ICheckoutService, CheckoutServivce>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
