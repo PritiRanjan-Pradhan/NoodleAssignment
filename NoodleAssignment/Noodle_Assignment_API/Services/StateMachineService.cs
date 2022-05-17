@@ -15,9 +15,9 @@ namespace Noodle_Assignment_API.Services
         {
             var stateOrderPackedDraft = new StateDraft
             {
-                Key = "OrderPacked3",
+                Key = "OrderPacked4",
                 Initial = true,
-                Name = new LocalizedString { { "en", "Order Packed3" } },
+                Name = new LocalizedString { { "en", "Order Packed4" } },
                 Type = IStateTypeEnum.OrderState
             };
 
@@ -29,9 +29,9 @@ namespace Noodle_Assignment_API.Services
 
             var stateOrderShippedDraft = new StateDraft
             {
-                Key = "OrderShipped3",
+                Key = "OrderShipped4",
                 Initial = false,
-                Name = new LocalizedString { { "en", "Order Shipped3" } },
+                Name = new LocalizedString { { "en", "Order Shipped4" } },
                 Type = IStateTypeEnum.OrderState
             };
 

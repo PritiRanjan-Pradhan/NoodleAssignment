@@ -13,12 +13,20 @@ namespace Noodle_Assignment_API.Controllers
         private readonly IImportApiService _importApiService;
         private readonly IStateMachineService _stateMachineService;
         private readonly ICheckoutService _checkoutService;
+        private readonly IMeService _meService;
+        private readonly ICartMerging _cartMerging;
+        private readonly IInStore _inStore;
+        private readonly ISerchService _serchService;
         public ExcerciseController(IDummyExcercise dummyExcercise,
             ICreateService createService,
             IUpdateGroupService updateGroupService,
             IImportApiService importApiService,
             IStateMachineService stateMachineService,
-            ICheckoutService checkoutService)
+            ICheckoutService checkoutService,
+            IMeService meService,
+            ICartMerging cartMerging
+            ,IInStore inStore
+            ,ISerchService serchService)
         {
             _dummyExcercise = dummyExcercise;
             _createService = createService;
@@ -26,6 +34,10 @@ namespace Noodle_Assignment_API.Controllers
             _importApiService = importApiService;
             _stateMachineService = stateMachineService;
            _checkoutService = checkoutService;
+            _meService = meService;
+            _cartMerging = cartMerging;
+            _inStore = inStore;
+            _serchService = serchService;
         }
         [HttpGet("dummy-execute")]
         public Task<string> DummyExcercise()
@@ -61,6 +73,28 @@ namespace Noodle_Assignment_API.Controllers
         public async Task<string> Chekout()
         {
            return await _checkoutService.ExecuteAsync();
+        }
+
+        [HttpPost("myProfile")]
+        public async Task<string> MyProfile()
+        {
+           return  await _meService.ExecuteAsync();
+        }
+
+        [HttpPost("mergecart")]
+        public async Task<string> MergeCart()
+        {
+            return await _cartMerging.ExecuteAsync();
+        }
+        [HttpPost("")]
+        public Task<string> CreateCartInStore()
+        {
+          return _inStore.ExecuteAsync();
+        }
+        [HttpPost("search")]
+        public Task<string> Search()
+        {
+            return _serchService.ExecuteAsync();
         }
     }
 }

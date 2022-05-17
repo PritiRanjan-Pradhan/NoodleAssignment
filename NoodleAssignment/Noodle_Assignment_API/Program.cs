@@ -11,6 +11,11 @@ builder.Services.AddScoped<IUpdateGroupService, UpdateGroupService>();
 builder.Services.AddScoped<IImportApiService,ImportAPIService>();
 builder.Services.AddScoped<IStateMachineService, StateMachineService>();
 builder.Services.AddScoped<ICheckoutService, CheckoutServivce>();
+builder.Services.AddScoped<ICartMerging,CartMerging>();
+builder.Services.AddScoped<IMeService, MeService>();
+builder.Services.AddScoped<IInStore,InStoreService>();
+builder.Services.AddScoped<ISerchService,SearchService>();
+builder.Services.AddScoped<IProductSelectionService, ProductSelectionService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

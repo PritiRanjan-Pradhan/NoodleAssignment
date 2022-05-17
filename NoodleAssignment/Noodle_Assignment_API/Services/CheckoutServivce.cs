@@ -1,4 +1,5 @@
 ﻿using commercetools.Sdk.Api.Models.Carts;
+using commercetools.Sdk.Api.Models.Orders;
 using commercetools.Sdk.Api.Models.Payments;
 
 namespace Noodle_Assignment_API.Services
@@ -6,10 +7,12 @@ namespace Noodle_Assignment_API.Services
     public class CheckoutServivce : ICheckoutService
     {
         private readonly IClient _client;
+        private  readonly IStateMachineService _stateMachineService;
         private readonly string projectKey;
-        public CheckoutServivce(IEnumerable<IClient> clients, IConfiguration configuration)
+        public CheckoutServivce(IEnumerable<IClient> clients, IConfiguration configuration,IStateMachineService stateMachineService)
         {
             _client = clients.FirstOrDefault(p => p.Name.Equals("Client"));
+            _stateMachineService = stateMachineService;
             projectKey = configuration.GetValue<string>("client:ProjectKey");
         }
         public async Task<string> ExecuteAsync()
@@ -29,14 +32,14 @@ namespace Noodle_Assignment_API.Services
 
                 VariantId = 1,
                 Quantity = 1,
-                ExternalPrice = Money.FromDecimal("INR", 500),
+                ExternalPrice = Money.FromDecimal("INR", 599M),
 
             };
             var lineItemDrafts = new List<ILineItemDraft>() { lineItemDraft };
             var cartDraft = new CartDraft()
             {
                 Currency = "INR",
-                //CustomerId = customer.Id,
+                CustomerId = customer.Id,
                 CustomerEmail = customer.Email,
                 LineItems = lineItemDrafts,
                 BillingAddress = customer.Addresses[0]
@@ -47,6 +50,8 @@ namespace Noodle_Assignment_API.Services
                             .Carts()
                             .Post(cartDraft)
                             .ExecuteAsync();
+
+            Console.WriteLine($"Cart {cart.Id} for customer: {cart.CustomerId}");
 
             //Add items ton the cart
 
@@ -104,7 +109,7 @@ namespace Noodle_Assignment_API.Services
             var payementDraft = new PaymentDraft()
             {
 
-                AmountPlanned = Money.FromDecimal(cart?.TotalPrice.CurrencyCode, Convert.ToDecimal(cart?.TotalPrice.CentAmount))
+                AmountPlanned = Money.FromDecimal(updatedCart?.TotalPrice.CurrencyCode, Convert.ToDecimal(updatedCart?.TotalPrice.CentAmount))
             };
             var payment = await _client.WithApi()
                 .WithProjectKey(projectKey)
@@ -118,7 +123,7 @@ namespace Noodle_Assignment_API.Services
             {
                 Timestamp = DateTime.UtcNow,
                 Type = ITransactionType.Charge,
-                Amount = Money.FromDecimal(cart?.TotalPrice.CurrencyCode, Convert.ToDecimal(cart?.TotalPrice.CentAmount))
+                Amount = Money.FromDecimal(updatedCart?.TotalPrice.CurrencyCode, Convert.ToDecimal(updatedCart?.TotalPrice.CentAmount))
             };
 
             var addTransaction = new PaymentAddTransactionAction()
@@ -145,20 +150,137 @@ namespace Noodle_Assignment_API.Services
             {
                 Payment = paymentResource
             };
-            var cartUpdateWithPayment = new CartUpdate()
+            var paymentAddedToCart = new CartUpdate()
             {
                 Actions = new List<ICartUpdateAction> { cartPayment },
                 Version = updatedCart?.Version ?? 0,
                 
             };
-         var paymentAddedTocart=   await _client.WithApi()
+         var cartUpdateWithPayment=   await _client.WithApi()
                .WithProjectKey(projectKey)
                .Carts()
                .WithId(updatedCart?.Id)
-               .Post(cartUpdateWithPayment)
+               .Post(paymentAddedToCart)
                .ExecuteAsync();
 
-            return paymentAddedTocart.Id;
+       //Create order 
+
+        var cartResource = new CartResourceIdentifier() { Id= updatedCart?.Id };
+
+            var orderDraft = new OrderFromCartDraft()
+            {
+                Cart = cartResource,
+                Version = cartUpdateWithPayment?.Version ?? 0,
+                
+
+            };
+            var order = await _client.WithApi()
+                .WithProjectKey(projectKey)
+                .Orders()
+                .Post(orderDraft)
+                .ExecuteAsync();
+            Console.WriteLine($"Order Created with order number: {order.OrderNumber}");
+
+           // var state=new orderstat
+
+            var changeOrderState = new OrderChangeOrderStateAction()
+            {
+                OrderState = IOrderState.Confirmed,
+                
+            };
+            var orderUpdate = new OrderUpdate()
+            {
+                Actions = new List<IOrderUpdateAction> { changeOrderState },
+
+                Version = order?.Version ?? 0,
+                
+            };
+
+            var orderConfirmed = await _client.WithApi()
+                .WithProjectKey(projectKey)
+                .Orders()
+                .WithId(order?.Id)
+                .Post(orderUpdate)
+                .ExecuteAsync();
+            
+            Console.WriteLine($"Order state changed to: {orderConfirmed?.OrderState.Value}");
+
+            //GET custom workflow state for Order
+            var orderPackedState = await _client.WithApi()
+              .WithProjectKey(projectKey)
+              .States()
+              .WithId("e7008107-2a72-4ffd-b358-e0e4b6bcfd76")
+              .Get()
+              .ExecuteAsync();
+         ///   var orderStateChangeToPacked =new OrderTra
+            var orderShippedState = await _client.WithApi()
+              .WithProjectKey(projectKey)
+              .States()
+              .WithId("f289835b-ad6a-4d47-b7ca-8715307ede9e")
+              .Get()
+              .ExecuteAsync();
+            //Packed
+          
+           
+            //var stateResource = new StateResourceIdentifier() { Id = orderShippedState?.Id,Key=orderShippedState?.Key };
+           
+            //var action = new StateSetTransitionsAction()
+            //{
+            //    Transitions = new List<IStateResourceIdentifier>() { stateResource }
+            //};
+
+            //var stateUpdate = new StateUpdate()
+            //{
+            //    Actions = new List<IStateUpdateAction>() { action },
+            //    Version = orderPackedState?.Version ?? 0
+            //};
+
+            //var orderStateUpdate = await _client.WithApi().WithProjectKey(projectKey)
+            //    .States()
+            //    .WithId(orderPackedState?.Id)
+            //    .Post(stateUpdate)
+            //    .ExecuteAsync();
+            var stateResource2 = new StateReference() {Obj=orderPackedState,Id=orderPackedState.Id};
+            var s=new StateResourceIdentifier() { Id=stateResource2.Id};
+            var v = new OrderTransitionStateAction()
+            { State = s,
+            
+            };
+            
+            //  //orderConfirmed.
+            //  var r =new StateResourceIdentifier() { Id = orderStateUpdate.Id };
+            //var p=  new OrderTransitionStateAction()
+            //  {
+            //      State = r
+            //  };
+            //  var orderUpdate2 = new OrderUpdate()
+            //  {
+            //      Actions = new List<IOrderUpdateAction> { p },
+
+            //      Version = orderConfirmed?.Version ?? 0,
+            //  };
+            //  var orderConfirmed2 = await _client.WithApi()
+            //    .WithProjectKey(projectKey)
+            //    .Orders()
+            //    .WithId(orderConfirmed?.Id)
+            //    .Post(orderUpdate2)
+            //    .ExecuteAsync();
+            var orderUpdate2 = new OrderUpdate()
+            {
+                Actions = new List<IOrderUpdateAction> { v },
+
+                Version = orderConfirmed?.Version ?? 0,
+
+            };
+            var orderConfirmed2 = await _client.WithApi()
+               .WithProjectKey(projectKey)
+               .Orders()
+               .WithId(orderConfirmed?.Id)
+               .Post(orderUpdate2)
+               .ExecuteAsync();
+
+            return $"Order Workflow State changed to: {orderConfirmed2?.State?.Obj?.Name["en"]}";
+
         }
     }
 }
