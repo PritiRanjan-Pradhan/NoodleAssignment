@@ -18,6 +18,8 @@ namespace Noodle_Assignment_API.Controllers
         private readonly IInStore _inStore;
         private readonly ISerchService _serchService;
         private readonly IPagedQuery _pagedQuery;
+        private readonly IGraphQLService _graphQLService;
+        private readonly ICustomType _customType;
         public ExcerciseController(IDummyExcercise dummyExcercise,
             ICreateService createService,
             IUpdateGroupService updateGroupService,
@@ -28,7 +30,9 @@ namespace Noodle_Assignment_API.Controllers
             ICartMerging cartMerging
             ,IInStore inStore
             ,ISerchService serchService,
-            IPagedQuery pagedQuery)
+            IPagedQuery pagedQuery,
+            IGraphQLService graphQLService,
+            ICustomType customType)
         {
             _dummyExcercise = dummyExcercise;
             _createService = createService;
@@ -41,6 +45,8 @@ namespace Noodle_Assignment_API.Controllers
             _inStore = inStore;
             _serchService = serchService;
             _pagedQuery = pagedQuery;   
+            _graphQLService = graphQLService;
+            _customType=customType;
         }
         [HttpGet("dummy-execute")]
         public Task<string> DummyExcercise()
@@ -104,6 +110,17 @@ namespace Noodle_Assignment_API.Controllers
         public Task<string> GetProductsSortById()
         {
            return  _pagedQuery.ExecuteAsync();
+        }
+        [HttpPost("graphql")]
+        public Task GraphQL()
+        {
+            return _graphQLService.ExecuteAsync();
+        }
+
+        [HttpPost("add-customfield-to-customer")]
+        public Task AddCustomFieldToCustomer()
+        { 
+           return _customType.ExecuteAsync();
         }
     }
 }
