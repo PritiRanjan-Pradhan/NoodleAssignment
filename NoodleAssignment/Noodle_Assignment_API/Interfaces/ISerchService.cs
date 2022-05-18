@@ -2,6 +2,6 @@
 {
     public interface ISerchService
     {
-        Task<string> ExecuteAsync();
+        Task ExecuteAsync();
     }
 }

@@ -12,7 +12,7 @@ namespace Noodle_Assignment_API.Services
             _client = clients.FirstOrDefault(p => p.Name.Equals("Client"));
             projectKey = configuration.GetValue<string>("Client:ProjectKey");
         }
-        public async Task<string> ExecuteAsync()
+        public async Task ExecuteAsync()
         {
             var channel = await _client.WithApi()
                 .WithProjectKey(projectKey)
@@ -32,8 +32,8 @@ namespace Noodle_Assignment_API.Services
             var lineItemDraft = new LineItemDraft()
             {
                 Sku = "A0E2000000024BC",
-                SupplyChannel=new ChannelResourceIdentifier { Id = channel.Id },
-                
+                SupplyChannel = new ChannelResourceIdentifier { Id = channel.Id },
+
                 Quantity = 1,
                 ExternalPrice = Money.FromDecimal("INR", 399M),
 
@@ -88,7 +88,7 @@ namespace Noodle_Assignment_API.Services
                 AnonymousCart = new CartResourceIdentifier
                 {
                     Id = anonymousCart.Id,
-                    
+
                 },
                 AnonymousId = anonymousCart.AnonymousId,
                 AnonymousCartSignInMode = IAnonymousCartSignInMode.MergeWithExistingCustomerCart,
@@ -112,7 +112,7 @@ namespace Noodle_Assignment_API.Services
                     Console.WriteLine($"SKU: {lineItem.Variant.Sku}, Quantity: {lineItem.Quantity}");
                 }
             }
-            throw new NotImplementedException();
+            
         }
     }
 }

@@ -20,6 +20,10 @@ namespace Noodle_Assignment_API.Controllers
         private readonly IPagedQuery _pagedQuery;
         private readonly IGraphQLService _graphQLService;
         private readonly ICustomType _customType;
+        private readonly ICustomObjectService _customObjectService;
+        private readonly IApiExtensionService _apiExtensionService;
+        private readonly ISubscriptionService _subscriptionService;
+        private readonly IErrorHandlingService _errorHandlingService;
         public ExcerciseController(IDummyExcercise dummyExcercise,
             ICreateService createService,
             IUpdateGroupService updateGroupService,
@@ -32,7 +36,11 @@ namespace Noodle_Assignment_API.Controllers
             ,ISerchService serchService,
             IPagedQuery pagedQuery,
             IGraphQLService graphQLService,
-            ICustomType customType)
+            ICustomType customType,
+            ICustomObjectService customObjectService,
+            ISubscriptionService subscriptionService,
+            IApiExtensionService apiExtensionService,
+            IErrorHandlingService errorHandlingService)
         {
             _dummyExcercise = dummyExcercise;
             _createService = createService;
@@ -47,6 +55,10 @@ namespace Noodle_Assignment_API.Controllers
             _pagedQuery = pagedQuery;   
             _graphQLService = graphQLService;
             _customType=customType;
+            _customObjectService=customObjectService;
+            _subscriptionService = subscriptionService;
+            _apiExtensionService = apiExtensionService;
+            _errorHandlingService = errorHandlingService;
         }
         [HttpGet("dummy-execute")]
         public Task<string> DummyExcercise()
@@ -91,17 +103,17 @@ namespace Noodle_Assignment_API.Controllers
         }
 
         [HttpPost("mergecart")]
-        public async Task<string> MergeCart()
+        public async Task MergeCart()
         {
             return await _cartMerging.ExecuteAsync();
         }
-        [HttpPost("")]
+        [HttpPost("in-store-service ")]
         public Task<string> CreateCartInStore()
         {
           return _inStore.ExecuteAsync();
         }
         [HttpPost("search")]
-        public Task<string> Search()
+        public Task Search()
         {
             return _serchService.ExecuteAsync();
         }
@@ -121,6 +133,29 @@ namespace Noodle_Assignment_API.Controllers
         public Task AddCustomFieldToCustomer()
         { 
            return _customType.ExecuteAsync();
+        }
+        [HttpPost("create-custom-object")]
+        public Task CreateCustomObjectService()
+        {
+            return _customObjectService.ExecuteAsync();
+        }
+
+        [HttpPost("create-api-extension-service")]
+        public Task CreateAPIExtension()
+        {
+            return _apiExtensionService.ExcuteAsync();
+        }
+
+        [HttpPost("create-subscription")]
+        public Task CreateSubscription()
+        {
+            return _subscriptionService.ExecuteAsync();
+        }
+
+        [HttpPost("error-handling")]
+        public Task ErrorHandler()
+        {
+            return _errorHandlingService.ExecuteAsync();
         }
     }
 }

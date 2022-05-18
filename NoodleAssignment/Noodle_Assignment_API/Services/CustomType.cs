@@ -67,7 +67,6 @@ namespace Noodle_Assignment_API.Services
                     .WithId(customer.Id)
                     .Post(customerUpdateAction)
                     .ExecuteAsync();
-
             }
           
 

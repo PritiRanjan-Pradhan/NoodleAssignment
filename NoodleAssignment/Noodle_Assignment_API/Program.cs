@@ -18,7 +18,11 @@ builder.Services.AddScoped<ISerchService,SearchService>();
 builder.Services.AddScoped<IProductSelectionService, ProductSelectionService>();
 builder.Services.AddScoped<IPagedQuery, PagedQuery>();
 builder.Services.AddScoped<IGraphQLService,GraphQlService>();
-builder.Services.AddScoped<ICustomType,CustomType>();   
+builder.Services.AddScoped<ICustomType,CustomType>(); 
+builder.Services.AddScoped<ICustomObjectService,CustomObjectsService>();
+builder.Services.AddScoped<IApiExtensionService,ApiExtensionSevice>();
+builder.Services.AddScoped<ISubscriptionService , SubscriptionService>();
+builder.Services.AddScoped<IErrorHandlingService, ErrorHandlingService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

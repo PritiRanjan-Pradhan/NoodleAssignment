@@ -33,3 +33,4 @@ D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\bin\Debug\net6.0\comm
 D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\bin\Debug\net6.0\commercetools.Sdk.ImportApi.dll
 D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\bin\Debug\net6.0\JsonSubTypes.dll
 D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\NoodleAssignment\NoodleAssignment\Noodle_Assignment_API\bin\Debug\net6.0\Resources\compatibility-info.json
