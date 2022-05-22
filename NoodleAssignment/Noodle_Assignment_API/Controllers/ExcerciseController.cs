@@ -24,6 +24,7 @@ namespace Noodle_Assignment_API.Controllers
         private readonly IApiExtensionService _apiExtensionService;
         private readonly ISubscriptionService _subscriptionService;
         private readonly IErrorHandlingService _errorHandlingService;
+        private readonly IProductSelectionService _productSelectionService;
         public ExcerciseController(IDummyExcercise dummyExcercise,
             ICreateService createService,
             IUpdateGroupService updateGroupService,
@@ -32,85 +33,93 @@ namespace Noodle_Assignment_API.Controllers
             ICheckoutService checkoutService,
             IMeService meService,
             ICartMerging cartMerging
-            ,IInStore inStore
-            ,ISerchService serchService,
+            , IInStore inStore
+            , ISerchService serchService,
             IPagedQuery pagedQuery,
             IGraphQLService graphQLService,
             ICustomType customType,
             ICustomObjectService customObjectService,
             ISubscriptionService subscriptionService,
             IApiExtensionService apiExtensionService,
-            IErrorHandlingService errorHandlingService)
+            IErrorHandlingService errorHandlingService,
+            IProductSelectionService productSelectionService)
         {
             _dummyExcercise = dummyExcercise;
             _createService = createService;
             _updateGroupService = updateGroupService;
             _importApiService = importApiService;
             _stateMachineService = stateMachineService;
-           _checkoutService = checkoutService;
+            _checkoutService = checkoutService;
             _meService = meService;
             _cartMerging = cartMerging;
             _inStore = inStore;
             _serchService = serchService;
-            _pagedQuery = pagedQuery;   
+            _pagedQuery = pagedQuery;
             _graphQLService = graphQLService;
-            _customType=customType;
-            _customObjectService=customObjectService;
+            _customType = customType;
+            _customObjectService = customObjectService;
             _subscriptionService = subscriptionService;
             _apiExtensionService = apiExtensionService;
             _errorHandlingService = errorHandlingService;
+            _productSelectionService = productSelectionService;
         }
         [HttpGet("dummy-execute")]
         public Task<string> DummyExcercise()
         {
-           return _dummyExcercise.ExecuteAsync();
+            return _dummyExcercise.ExecuteAsync();
         }
 
         [HttpPost("create-customer")]
-        public Task<string> CreateCustomer()
+        public Task<string> CreateCustomer([FromBody] CreateCustomer customer)
         {
-           return _createService.ExecuteAsync();
+            return _createService.ExecuteAsync(customer);
         }
 
         [HttpPost("set-customer-group")]
         public Task<string> SetCustomerGroup(UpdateServiceModel updateServiceModel)
         {
-           return _updateGroupService.ExecuteAsync(updateServiceModel);
+            return _updateGroupService.ExecuteAsync(updateServiceModel);
         }
 
         [HttpPost("import-api")]
         public Task<string> ImportAPI()
         {
-           return  _importApiService.ExecuteAsync();
+            return _importApiService.ExecuteAsync();
         }
 
         [HttpPost("create-update-state-transitions")]
-        public Task<string> CreateUpdateStateTransitions()
+        public Task<string> CreateUpdateStateTransitions(StateMachineModel stateMachineModel)
         {
-            return _stateMachineService.ExecuteAsync();
-                
+            return _stateMachineService.ExecuteAsync(stateMachineModel);
+
         }
         [HttpPost("checkout")]
         public async Task<string> Chekout()
         {
-           return await _checkoutService.ExecuteAsync();
+            return await _checkoutService.ExecuteAsync();
         }
 
         [HttpPost("myProfile")]
-        public async Task<string> MyProfile()
+        public async Task<string> MyProfile([FromBody] MeClientModel meClient)
         {
-           return  await _meService.ExecuteAsync();
+            return await _meService.ExecuteAsync(meClient);
+        }
+
+        [HttpPost("product-selection")]
+        public async Task ProductSelection()
+        {
+             await _productSelectionService.ExecuteAsync();
         }
 
         [HttpPost("mergecart")]
-        public async Task MergeCart()
+        public Task MergeCart(CartMergeModel cartMergeModel)
         {
-            return await _cartMerging.ExecuteAsync();
+            return _cartMerging.ExecuteAsync(cartMergeModel);
         }
-        [HttpPost("in-store-service ")]
-        public Task<string> CreateCartInStore()
+        [HttpPost("in-store-service")]
+        public Task<string> CreateCartInStore([FromBody] InStoreModel inStoreModel)
         {
-          return _inStore.ExecuteAsync();
+            return _inStore.ExecuteAsync(inStoreModel);
         }
         [HttpPost("search")]
         public Task Search()
@@ -121,7 +130,7 @@ namespace Noodle_Assignment_API.Controllers
         [HttpPost("getProductsSortById")]
         public Task<string> GetProductsSortById()
         {
-           return  _pagedQuery.ExecuteAsync();
+            return _pagedQuery.ExecuteAsync();
         }
         [HttpPost("graphql")]
         public Task GraphQL()
@@ -131,8 +140,8 @@ namespace Noodle_Assignment_API.Controllers
 
         [HttpPost("add-customfield-to-customer")]
         public Task AddCustomFieldToCustomer()
-        { 
-           return _customType.ExecuteAsync();
+        {
+            return _customType.ExecuteAsync();
         }
         [HttpPost("create-custom-object")]
         public Task CreateCustomObjectService()

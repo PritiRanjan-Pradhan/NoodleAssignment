@@ -11,13 +11,13 @@ namespace Noodle_Assignment_API.Services
             _client = clients.FirstOrDefault(p => p.Name.Equals("Client"));
             projectKey = configuration.GetValue<string>("Client:ProjectKey");
         }
-        public async Task<string> ExecuteAsync()
+        public async Task<string> ExecuteAsync(StateMachineModel stateMachineModel)
         {
             var stateOrderPackedDraft = new StateDraft
             {
-                Key = "OrderPacked4",
+                Key = stateMachineModel.InitialOrderStateKey,
                 Initial = true,
-                Name = new LocalizedString { { "en", "Order Packed4" } },
+                Name = new LocalizedString { { "en", stateMachineModel.InitialOrderStateName } },
                 Type = IStateTypeEnum.OrderState
             };
 
@@ -29,9 +29,9 @@ namespace Noodle_Assignment_API.Services
 
             var stateOrderShippedDraft = new StateDraft
             {
-                Key = "OrderShipped4",
+                Key = stateMachineModel.TransitionedOrderStateKey,
                 Initial = false,
-                Name = new LocalizedString { { "en", "Order Shipped4" } },
+                Name = new LocalizedString { { "en", stateMachineModel.TrasitionedOrderStateName } },
                 Type = IStateTypeEnum.OrderState
             };
 
@@ -63,7 +63,7 @@ namespace Noodle_Assignment_API.Services
             ////Console.WriteLine($"stateOrderShipped Id : {stateOrderShipped.Id}, stateOrderPacked transition to:  {updatedStateOrderPacked.Transitions[0].Id}");
 
 
-            return $"stateOrderShippedId :  { stateOrderShippedDraftResponse.Id} , stateOrderPacked transition to : {updatedOrder1response.Transitions[0].Id}";
+            return $"stateOrderShippedId :  { stateOrderShippedDraftResponse?.Id} , stateOrderPacked transition to : {updatedOrder1response.Transitions[0].Id}";
             //return "hello";
         }
     }

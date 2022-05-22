@@ -10,19 +10,19 @@ namespace Noodle_Assignment_API.Services
             _client = clients.FirstOrDefault(c => c.Name.Equals("Client"));
             projectKey = configuration.GetValue<string>("Client:ProjectKey");
         }
-        public async Task<string> ExecuteAsync()
+        public async Task<string> ExecuteAsync(CreateCustomer customer)
         {
             // CREATE customer draft
             var customerDraft = new CustomerDraft
             {
-                Email = "pritiranjan3@example.com",
-                Password = "password",
+                Email = customer.Email,
+                Password = customer.Password,
                 Key = Guid.NewGuid().ToString("n").Substring(0,8),
-                FirstName = "Pritiranjan3",
-                LastName = "Pradhan3",
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
                 Addresses = new List<IBaseAddress>{
                         new AddressDraft {
-                            Country = "DE",
+                            Country = customer.Country,
                     }
                 },
                 DefaultShippingAddress = 0,

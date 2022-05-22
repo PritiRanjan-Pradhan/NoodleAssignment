@@ -12,26 +12,26 @@ namespace Noodle_Assignment_API.Services
             _client = clients.FirstOrDefault(p => p.Name.Equals("Client"));
             projectKey = configuration.GetValue<string>("Client:ProjectKey");
         }
-        public async Task ExecuteAsync()
+        public async Task ExecuteAsync(CartMergeModel cartMergeModel)
         {
             var channel = await _client.WithApi()
                 .WithProjectKey(projectKey)
                 .Channels()
-                .WithId("639975c4-520a-464f-be0b-1bddba2bc941")
+                .WithId(cartMergeModel.ChannelId)
                 .Get()
                 .ExecuteAsync();
 
             var customer = await _client.WithApi()
                                .WithProjectKey(projectKey)
                                .Customers()
-                               .WithId("e0cfbfb5-9f78-40aa-bdfa-5e5f49c769ea")
+                               .WithId(cartMergeModel.CustomerId)
                                .Get()
                                .ExecuteAsync();
 
             //Create Cart for customer
             var lineItemDraft = new LineItemDraft()
             {
-                Sku = "A0E2000000024BC",
+                Sku = cartMergeModel.SKU,
                 SupplyChannel = new ChannelResourceIdentifier { Id = channel.Id },
 
                 Quantity = 1,
@@ -41,7 +41,7 @@ namespace Noodle_Assignment_API.Services
             var lineItemDrafts = new List<ILineItemDraft>() { lineItemDraft };
             var cartDraft = new CartDraft()
             {
-                Currency = "INR",
+                Currency = cartMergeModel.Currency,
                 CustomerId = customer.Id,
                 CustomerEmail = customer.Email,
                 LineItems = lineItemDrafts,
@@ -58,17 +58,17 @@ namespace Noodle_Assignment_API.Services
 
             var lineItemDraftForAnnonymous = new LineItemDraft()
             {
-                Sku = "A0E2000000027DV",
+                Sku = cartMergeModel.SKU,
                 SupplyChannel = new ChannelResourceIdentifier { Id = channel.Id },
                 Quantity = 1,
-                ExternalPrice = Money.FromDecimal("INR", 299M),
+                ExternalPrice = Money.FromDecimal(cartMergeModel.Currency, cartMergeModel.Price),
 
             };
             var lineItemDraftsForAnnonymous = new List<ILineItemDraft>() { lineItemDraftForAnnonymous };
             var annonymosCartDraft = new CartDraft()
             {
-                Currency = "INR",
-                AnonymousId = "1234",
+                Currency = cartMergeModel.Currency,
+                AnonymousId = Guid.NewGuid().ToString(),
 
                 Country = "DE",
                 DeleteDaysAfterLastModification = 30,

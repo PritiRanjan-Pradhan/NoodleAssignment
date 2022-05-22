@@ -1,27 +1,55 @@
-﻿namespace Noodle_Assignment_API.Services
+﻿using commercetools.Sdk.Api.Serialization;
+
+namespace Noodle_Assignment_API.Services
 {
     public class MeService : IMeService
     {
         private readonly IClient _client;
         private readonly string projectKey;
-        public MeService(IEnumerable<IClient> clients,IConfiguration configuration)
+        private readonly IServiceProvider _serviceProvider;
+        public MeService(IEnumerable<IClient> clients,IConfiguration configuration,IServiceProvider serviceProvider)
         {
             _client = clients.FirstOrDefault(p => p.Name.Equals("Client"));
             projectKey = configuration.GetValue<string>("MeClient:ProjectKey");
+            _serviceProvider = serviceProvider;
         }
 
-        public async Task<string> ExecuteAsync()
+        public async Task<string> ExecuteAsync(MeClientModel meClientModel)
         {
-            var myProfile = await _client.WithApi()
+
+           
+
+            var configuration = _serviceProvider.GetService<IConfiguration>();
+            var httpClientFactory = _serviceProvider.GetService<IHttpClientFactory>();
+            var serializerService = _serviceProvider.GetService<SerializerService>();
+
+            var clientConfiguration = configuration.GetSection("MeClient").Get<ClientConfiguration>();
+
+            //Create passwordFlow TokenProvider
+            var passwordTokenProvider = TokenProviderFactory
+                .CreatePasswordTokenProvider(clientConfiguration,
+                    httpClientFactory,
+                    new InMemoryUserCredentialsStoreManager(meClientModel.Email, meClientModel.Password));
+
+            //Create MeClient
+            var meClient = ClientFactory.Create(
+                "MeClient",
+                clientConfiguration,
+                httpClientFactory,
+                serializerService,
+                passwordTokenProvider);
+
+            var myProfile = await meClient.WithApi()
                 .WithProjectKey(projectKey)
-                .Customers()
-                .WithId("e0cfbfb5-9f78-40aa-bdfa-5e5f49c769ea")
+                .Me()
                 .Get()
                 .ExecuteAsync();
             Console.WriteLine($"My Profile, firstName:{myProfile.FirstName}, lastName:{myProfile.LastName}");
-
-            var myOrders = await _client.WithApi()
+           
+            var myOrders = await meClient.WithApi()
                 .WithProjectKey(projectKey)
+                .Me()
+               
                 .Orders()
                 .Get()
                 .ExecuteAsync();

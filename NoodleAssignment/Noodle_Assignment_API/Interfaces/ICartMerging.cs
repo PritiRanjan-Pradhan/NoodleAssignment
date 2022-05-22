@@ -2,6 +2,6 @@
 {
     public interface ICartMerging
     {
-        Task ExecuteAsync();
+        Task ExecuteAsync(CartMergeModel cartMergeModel);
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IStateMachineService
     {
-        Task<string> ExecuteAsync();
+        Task<string> ExecuteAsync(StateMachineModel stateMachineModel);
     }
 }

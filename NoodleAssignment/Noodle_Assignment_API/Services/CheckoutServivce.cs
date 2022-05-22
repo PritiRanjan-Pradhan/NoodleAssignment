@@ -7,28 +7,29 @@ namespace Noodle_Assignment_API.Services
     public class CheckoutServivce : ICheckoutService
     {
         private readonly IClient _client;
-        private  readonly IStateMachineService _stateMachineService;
+      
         private readonly string projectKey;
-        public CheckoutServivce(IEnumerable<IClient> clients, IConfiguration configuration,IStateMachineService stateMachineService)
+        public CheckoutServivce(IEnumerable<IClient> clients, IConfiguration configuration)
         {
             _client = clients.FirstOrDefault(p => p.Name.Equals("Client"));
-            _stateMachineService = stateMachineService;
-            projectKey = configuration.GetValue<string>("client:ProjectKey");
+           
+            projectKey = configuration.GetValue<string>("Client:ProjectKey");
         }
         public async Task<string> ExecuteAsync()
+
         {
             //Get The Customer
             var customer = await _client.WithApi()
                                  .WithProjectKey(projectKey)
                                  .Customers()
-                                 .WithId("e0cfbfb5-9f78-40aa-bdfa-5e5f49c769ea")
+                                 .WithId("28bf29de-5a8e-4c9b-9057-f6ae881d7767")
                                  .Get()
                                  .ExecuteAsync();
 
             //Create Cart
             var lineItemDraft = new LineItemDraft()
             {
-                ProductId = "75b9c337-84b6-4422-9c6b-89e72bdf3383",
+                ProductId = "4755917e-55fa-4c01-8d93-e1fbd1396636",
 
                 VariantId = 1,
                 Quantity = 1,
@@ -38,6 +39,7 @@ namespace Noodle_Assignment_API.Services
             var lineItemDrafts = new List<ILineItemDraft>() { lineItemDraft };
             var cartDraft = new CartDraft()
             {
+                Country = "IN",
                 Currency = "INR",
                 CustomerId = customer.Id,
                 CustomerEmail = customer.Email,
@@ -83,7 +85,6 @@ namespace Noodle_Assignment_API.Services
             };
             var addressDraft = new AddressDraft()
             {
-
                 Country = "DE",
                 FirstName = customer.FirstName,
                 LastName = customer.LastName,
@@ -98,17 +99,17 @@ namespace Noodle_Assignment_API.Services
                 Actions = new List<ICartUpdateAction> { lineItems, discousntCode, recalculate, shippingAddress },
                 Version = cart?.Version ?? 0
             };
-
-           var updatedCart =  await _client.WithApi()
-                .WithProjectKey(projectKey)
-                .Carts()
-                .WithId(cart?.Id)
-                .Post(cartUpdate)
-                .ExecuteAsync();
+           
+            var updatedCart = await _client.WithApi()
+                 .WithProjectKey(projectKey)
+                 .Carts()
+                 .WithId(cart?.Id)
+                 .Post(cartUpdate)
+                 .ExecuteAsync();
             var customerResource = new CustomerResourceIdentifier() { Id = customer.Id };
             var payementDraft = new PaymentDraft()
             {
-
+                Customer = customerResource,
                 AmountPlanned = Money.FromDecimal(updatedCart?.TotalPrice.CurrencyCode, Convert.ToDecimal(updatedCart?.TotalPrice.CentAmount))
             };
             var payment = await _client.WithApi()
@@ -154,46 +155,44 @@ namespace Noodle_Assignment_API.Services
             {
                 Actions = new List<ICartUpdateAction> { cartPayment },
                 Version = updatedCart?.Version ?? 0,
-                
+
             };
-         var cartUpdateWithPayment=   await _client.WithApi()
-               .WithProjectKey(projectKey)
-               .Carts()
-               .WithId(updatedCart?.Id)
-               .Post(paymentAddedToCart)
-               .ExecuteAsync();
+            var cartUpdateWithPayment = await _client.WithApi()
+                  .WithProjectKey(projectKey)
+                  .Carts()
+                  .WithId(updatedCart?.Id)
+                  .Post(paymentAddedToCart)
+                  .ExecuteAsync();
 
-       //Create order 
+            //Create order 
 
-        var cartResource = new CartResourceIdentifier() { Id= updatedCart?.Id };
+            var cartResource = new CartResourceIdentifier() { Id = cartUpdateWithPayment?.Id, };
 
             var orderDraft = new OrderFromCartDraft()
             {
                 Cart = cartResource,
                 Version = cartUpdateWithPayment?.Version ?? 0,
-                
-
             };
+
             var order = await _client.WithApi()
                 .WithProjectKey(projectKey)
                 .Orders()
                 .Post(orderDraft)
                 .ExecuteAsync();
+
             Console.WriteLine($"Order Created with order number: {order.OrderNumber}");
 
-           // var state=new orderstat
-
+          
             var changeOrderState = new OrderChangeOrderStateAction()
             {
                 OrderState = IOrderState.Confirmed,
-                
+
             };
             var orderUpdate = new OrderUpdate()
             {
                 Actions = new List<IOrderUpdateAction> { changeOrderState },
-
                 Version = order?.Version ?? 0,
-                
+
             };
 
             var orderConfirmed = await _client.WithApi()
@@ -202,7 +201,7 @@ namespace Noodle_Assignment_API.Services
                 .WithId(order?.Id)
                 .Post(orderUpdate)
                 .ExecuteAsync();
-            
+
             Console.WriteLine($"Order state changed to: {orderConfirmed?.OrderState.Value}");
 
             //GET custom workflow state for Order
@@ -212,7 +211,7 @@ namespace Noodle_Assignment_API.Services
               .WithId("e7008107-2a72-4ffd-b358-e0e4b6bcfd76")
               .Get()
               .ExecuteAsync();
-         ///   var orderStateChangeToPacked =new OrderTra
+            ///   var orderStateChangeToPacked =new OrderTra
             var orderShippedState = await _client.WithApi()
               .WithProjectKey(projectKey)
               .States()
@@ -220,10 +219,10 @@ namespace Noodle_Assignment_API.Services
               .Get()
               .ExecuteAsync();
             //Packed
-          
-           
+
+
             //var stateResource = new StateResourceIdentifier() { Id = orderShippedState?.Id,Key=orderShippedState?.Key };
-           
+
             //var action = new StateSetTransitionsAction()
             //{
             //    Transitions = new List<IStateResourceIdentifier>() { stateResource }
@@ -240,13 +239,14 @@ namespace Noodle_Assignment_API.Services
             //    .WithId(orderPackedState?.Id)
             //    .Post(stateUpdate)
             //    .ExecuteAsync();
-            var stateResource2 = new StateReference() {Obj=orderPackedState,Id=orderPackedState.Id};
-            var s=new StateResourceIdentifier() { Id=stateResource2.Id};
+            var stateResource2 = new StateReference() { Obj = orderPackedState, Id = orderPackedState.Id };
+            var s = new StateResourceIdentifier() { Id = stateResource2.Id };
             var v = new OrderTransitionStateAction()
-            { State = s,
-            
+            {
+                State = s,
+
             };
-            
+
             //  //orderConfirmed.
             //  var r =new StateResourceIdentifier() { Id = orderStateUpdate.Id };
             //var p=  new OrderTransitionStateAction()

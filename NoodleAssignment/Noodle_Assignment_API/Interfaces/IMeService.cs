@@ -2,6 +2,6 @@
 {
     public interface IMeService
     {
-        public Task<string> ExecuteAsync();
+        public Task<string> ExecuteAsync(MeClientModel meClientModel);
     }
 }

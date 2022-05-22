@@ -2,6 +2,6 @@
 {
     public interface ICreateService
     {
-        Task<string> ExecuteAsync();
+        Task<string> ExecuteAsync(CreateCustomer customer);
     }
 }
