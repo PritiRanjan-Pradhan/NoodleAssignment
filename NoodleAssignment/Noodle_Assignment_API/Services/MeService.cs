@@ -49,7 +49,6 @@ namespace Noodle_Assignment_API.Services
             var myOrders = await meClient.WithApi()
                 .WithProjectKey(projectKey)
                 .Me()
-               
                 .Orders()
                 .Get()
                 .ExecuteAsync();

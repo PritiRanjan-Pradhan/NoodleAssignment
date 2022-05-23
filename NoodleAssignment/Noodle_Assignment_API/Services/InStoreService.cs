@@ -45,7 +45,7 @@ namespace Noodle_Assignment_API.Services
             };
             var cartDraft = new CartDraft()
             {
-                Currency = "INR",
+                Currency = inStoreModel.LineItemModel.Currency,
                 CustomerId = customer.Id,
                 CustomerEmail = customer.Email,
                 LineItems = lineItemDrafts,

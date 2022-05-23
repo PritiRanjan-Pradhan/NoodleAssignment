@@ -30,7 +30,7 @@ namespace Noodle_Assignment_API.Services
             {
                 Destination =httpDestination,
                 Triggers = new List<IExtensionTrigger>() { extensionTrigger },
-                Key = "Demo"
+                Key = $"Demo_{Guid.NewGuid().ToString("n").Substring(0,4)}"
             };
 
                 var extension = await _client.WithApi()
