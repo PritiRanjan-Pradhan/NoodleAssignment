@@ -13,16 +13,16 @@ namespace Noodle_Assignment_API.Services
             _projectkey = configuration.GetValue<string>("Client:ProjectKey");
         }   
 
-        public async Task ExecuteAsync()
+        public async Task ExecuteAsync(string productTypeKey)
         {
-            var product = await _client.WithApi()
+            var productType = await _client.WithApi()
                 .WithProjectKey(_projectkey)
-                .Products()
-                .WithKey("amanda")
+                .ProductTypes()
+                .WithKey(productTypeKey)
                 .Get()
                 .ExecuteAsync();
             
-            var filterQuery = $"id:\"{product.Id}\"";
+            var filterQuery = $"productType.id:\"{productType.Id}\"";
             
             var facet = "variants.attributes.color as color";
             
@@ -48,6 +48,6 @@ namespace Noodle_Assignment_API.Services
             }
           
 
-        }
+            }
     }
 }

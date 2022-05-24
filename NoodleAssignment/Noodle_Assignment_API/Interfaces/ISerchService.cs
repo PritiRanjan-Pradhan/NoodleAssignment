@@ -2,6 +2,6 @@
 {
     public interface ISerchService
     {
-        Task ExecuteAsync();
+        Task ExecuteAsync(string productTypeKey);
     }
 }

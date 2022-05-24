@@ -7,7 +7,7 @@ namespace Noodle_Assignment_API.Services
         public async Task<string> ExecuteAsync()
         {
            await Task.CompletedTask;
-            return "DUmmy excervise";
+            return "Dummy excercise";
         }
     }
 }

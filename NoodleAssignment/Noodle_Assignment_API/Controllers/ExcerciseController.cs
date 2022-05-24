@@ -121,10 +121,10 @@ namespace Noodle_Assignment_API.Controllers
         {
             return _inStore.ExecuteAsync(inStoreModel);
         }
-        [HttpPost("search")]
-        public Task Search()
+        [HttpPost("search/{productTypeKey}")]
+        public Task Search(string productTypeKey)
         {
-            return _serchService.ExecuteAsync();
+            return _serchService.ExecuteAsync(productTypeKey);
         }
 
         [HttpPost("getProductsSortById")]
