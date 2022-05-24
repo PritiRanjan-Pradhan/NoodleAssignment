@@ -106,9 +106,9 @@ namespace Noodle_Assignment_API.Controllers
         }
 
         [HttpPost("product-selection")]
-        public async Task ProductSelection()
+        public async Task ProductSelection(ProductSelectionModel productSelectionModel)
         {
-             await _productSelectionService.ExecuteAsync();
+             await _productSelectionService.ExecuteAsync(productSelectionModel);
         }
 
         [HttpPost("mergecart")]

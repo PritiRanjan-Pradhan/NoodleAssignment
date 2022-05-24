@@ -2,6 +2,6 @@
 {
     public interface IProductSelectionService
     {
-        Task ExecuteAsync();
+        Task ExecuteAsync(ProductSelectionModel productSelectionModel);
     }
 }

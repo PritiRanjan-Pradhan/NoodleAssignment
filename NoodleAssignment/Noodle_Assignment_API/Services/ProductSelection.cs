@@ -13,23 +13,25 @@ namespace Noodle_Assignment_API.Services
             _client = clients.FirstOrDefault(p => p.Name.Equals("Client"));
             _projectKey = configuration.GetValue<string>("Client:ProjectKey");
         }
-        public async Task ExecuteAsync()
+        public async Task ExecuteAsync(ProductSelectionModel productSelectionModel)
         {
             //Create Product Selection
             var productSelectionDraft = new ProductSelectionDraft()
             {
                 Key=Guid.NewGuid().ToString(),
-                Name = new LocalizedString { { "product", "product" } }
+                Name = new LocalizedString { { "de", productSelectionModel.Name } }
             };
             var productSelection = await _client.WithApi()
                       .WithProjectKey(_projectKey)
                       .ProductSelections()
                       .Post(productSelectionDraft)
                       .ExecuteAsync();
+            Console.WriteLine($"Product selection: {productSelection.Id} with {productSelection.ProductCount} products");
+
             //Add product to the selection
             var addedProduct = new ProductSelectionAddProductAction()
             {
-                Product = new ProductResourceIdentifier() { Id = "661a95b5-fe1a-4a53-bd0e-f6de70951c50" }
+                Product = new ProductResourceIdentifier() { Id = productSelectionModel.ProductId }
             };
             var updateProductSelection = new ProductSelectionUpdate()
             {
@@ -43,19 +45,16 @@ namespace Noodle_Assignment_API.Services
                 .Post(updateProductSelection)
                 .ExecuteAsync();
 
+            Console.WriteLine($"Berlin Product selection: {updatedProductSelection.Id} with {updatedProductSelection.ProductCount} products");
+
+
             var store = await _client.WithApi()
                .WithProjectKey(_projectKey)
                .Stores()
-               .WithId("43903c40-6bc2-4c9f-9be7-5457e169dbe8")
+               .WithId(productSelectionModel.StoreId)
                .Get()
                .ExecuteAsync();
-            //new AddProductSelection (beta)
-            //var productSelectionSettingDraft = new ProductSelectionSettingDraft()
-            //{
-            //    ProductSelection = new ProductSelectionResourceIdentifier() { Id =updatedProductSelection.Id},
-            //    Active = true
-
-            //};
+           
             var addProductSelection = new StoreAddProductSelectionAction()
             {
                 ProductSelection = new ProductSelectionResourceIdentifier() { Id = productSelection.Id },
@@ -71,7 +70,7 @@ namespace Noodle_Assignment_API.Services
            var updatedStore = await _client.WithApi()
                 .WithProjectKey(_projectKey)
                 .Stores()
-                .WithId("43903c40-6bc2-4c9f-9be7-5457e169dbe8")
+                .WithId(productSelectionModel.StoreId)
                 .Post(storeUpdate)
                 .ExecuteAsync();
 
