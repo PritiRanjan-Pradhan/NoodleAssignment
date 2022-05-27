@@ -94,9 +94,9 @@ namespace Noodle_Assignment_API.Controllers
 
         }
         [HttpPost("checkout")]
-        public async Task<string> Chekout()
+        public async Task<string> Chekout(CheckoutModel checkoutModel)
         {
-            return await _checkoutService.ExecuteAsync();
+            return await _checkoutService.ExecuteAsync(checkoutModel);
         }
 
         [HttpPost("myProfile")]
@@ -139,9 +139,9 @@ namespace Noodle_Assignment_API.Controllers
         }
 
         [HttpPost("add-customfield-to-customer")]
-        public Task AddCustomFieldToCustomer()
+        public Task AddCustomFieldToCustomer(CustomTypeModel customTypeModel)
         {
-            return _customType.ExecuteAsync();
+            return _customType.ExecuteAsync(customTypeModel);
         }
         [HttpPost("create-custom-object")]
         public Task CreateCustomObjectService()

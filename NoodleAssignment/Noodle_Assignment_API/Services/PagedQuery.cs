@@ -45,24 +45,28 @@ namespace Noodle_Assignment_API.Services
                        .ExecuteAsync();
                 }
 
-                Console.WriteLine($"Show Results of Page {currentPage}");
-                foreach (var product in response.Results)
+              
+                if (response.Results.Any())
                 {
-                    if (product.MasterData.Current.Name.ContainsKey("en"))
+                    Console.WriteLine($"Show Results of Page {currentPage}");
+                    foreach (var product in response.Results)
                     {
-                        Console.WriteLine($"{product.MasterData.Current.Name["en"]}");
+                        if (product.MasterData.Current.Name.ContainsKey("en"))
+                        {
+                            Console.WriteLine($"{product.MasterData.Current.Name["en"]}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"{product.MasterData.Current.Name["de"]}");
+                        }
                     }
-                    else
-                    {
-                        Console.WriteLine($"{product.MasterData.Current.Name["de"]}");
-                    }
+                    Console.WriteLine("///////////////////////");
+                    currentPage++;
+                    lastId = response.Results.Last().Id;
                 }
-                Console.WriteLine("///////////////////////");
-                currentPage++;
-                lastId = response.Results.Last().Id;
-                lastPage = response.Results.Count < pageSize;
+                lastPage = response?.Results.Count < pageSize;
             }
-            return response.Results.Count.ToString();
+            return response?.Results.Count.ToString();
         }
 
     }

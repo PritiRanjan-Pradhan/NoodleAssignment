@@ -12,14 +12,14 @@ namespace Noodle_Assignment_API.Services
             _client = clients.FirstOrDefault(r => r.Name.Equals("Client"));
             _projectKey = configuration.GetValue<string>("Client:ProjectKey");
         }
-        public async Task ExecuteAsync()
+        public async Task ExecuteAsync(CustomTypeModel customTypeModel)
 
         {
             var customField = new FieldDefinition()
             {
-                Name = "allowedToPlaceOrder",
-                Required = false,
-                Label = new LocalizedString { { "en", "allowedToPlaceOrder" } },
+                Name = customTypeModel.CustomField.CustomFieldName,
+                Required = customTypeModel.CustomField.Required,
+                Label = new LocalizedString { { "en", customTypeModel.CustomField.Label } },
                 Type = new CustomFieldStringType(){ Name = "String" }
             };
             var customFieldDefination = new List<IFieldDefinition>() { customField };
@@ -27,10 +27,10 @@ namespace Noodle_Assignment_API.Services
             {
               
                 
-                Name =new LocalizedString { { "en", "resources_you_want_to_extend" } },
-                Key= "resources_you_want_to_extend",
+                Name =new LocalizedString { { "en", customTypeModel.TypeName } },
+                Key= customTypeModel.Key,
                 ResourceTypeIds =new List<IResourceTypeId> { IResourceTypeId.Customer },
-                Description =new LocalizedString { { "desc", "Resources you want to extend" } },
+                Description =new LocalizedString { { "desc", customTypeModel.Description } },
                 FieldDefinitions=customFieldDefination,
                 
                 

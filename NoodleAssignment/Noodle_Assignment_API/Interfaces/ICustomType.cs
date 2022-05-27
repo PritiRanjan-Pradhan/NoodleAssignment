@@ -2,6 +2,6 @@
 {
     public interface ICustomType
     {
-        Task ExecuteAsync();
+        Task ExecuteAsync(CustomTypeModel customTypeModel);
     }
 }
