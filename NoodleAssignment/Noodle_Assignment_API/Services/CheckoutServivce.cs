@@ -15,7 +15,7 @@ namespace Noodle_Assignment_API.Services
 
             projectKey = configuration.GetValue<string>("Client:ProjectKey");
         }
-        public async Task<string> ExecuteAsync(CheckoutModel checkoutModel)
+        public async Task ExecuteAsync(CheckoutModel checkoutModel)
         {
 
             //Get The Customer
@@ -184,7 +184,7 @@ namespace Noodle_Assignment_API.Services
 
 
 
-            Console.WriteLine($"Order Created with order number: {order.OrderNumber}");
+            //Console.WriteLine($"Order Created with order number: {order.OrderNumber}");
 
 
             var changeOrderState = new OrderChangeOrderStateAction()
@@ -222,27 +222,7 @@ namespace Noodle_Assignment_API.Services
               .WithId("f289835b-ad6a-4d47-b7ca-8715307ede9e")
               .Get()
               .ExecuteAsync();
-            //Packed
-
-
-            //var stateResource = new StateResourceIdentifier() { Id = orderShippedState?.Id,Key=orderShippedState?.Key };
-
-            //var action = new StateSetTransitionsAction()
-            //{
-            //    Transitions = new List<IStateResourceIdentifier>() { stateResource }
-            //};
-
-            //var stateUpdate = new StateUpdate()
-            //{
-            //    Actions = new List<IStateUpdateAction>() { action },
-            //    Version = orderPackedState?.Version ?? 0
-            //};
-
-            //var orderStateUpdate = await _client.WithApi().WithProjectKey(projectKey)
-            //    .States()
-            //    .WithId(orderPackedState?.Id)
-            //    .Post(stateUpdate)
-            //    .ExecuteAsync();
+            
             var stateResource2 = new StateReference() { Obj = orderPackedState, Id = orderPackedState.Id };
             var s = new StateResourceIdentifier() { Id = stateResource2.Id };
             var v = new OrderTransitionStateAction()
@@ -251,24 +231,7 @@ namespace Noodle_Assignment_API.Services
 
             };
 
-            //  //orderConfirmed.
-            //  var r =new StateResourceIdentifier() { Id = orderStateUpdate.Id };
-            //var p=  new OrderTransitionStateAction()
-            //  {
-            //      State = r
-            //  };
-            //  var orderUpdate2 = new OrderUpdate()
-            //  {
-            //      Actions = new List<IOrderUpdateAction> { p },
-
-            //      Version = orderConfirmed?.Version ?? 0,
-            //  };
-            //  var orderConfirmed2 = await _client.WithApi()
-            //    .WithProjectKey(projectKey)
-            //    .Orders()
-            //    .WithId(orderConfirmed?.Id)
-            //    .Post(orderUpdate2)
-            //    .ExecuteAsync();
+         
             var orderUpdate2 = new OrderUpdate()
             {
                 Actions = new List<IOrderUpdateAction> { v },
@@ -284,7 +247,7 @@ namespace Noodle_Assignment_API.Services
                .ExecuteAsync();
 
 
-            return $"Order Workflow State changed to: {orderConfirmed2?.State?.Obj?.Name["en"]}";
+           
 
         }
     }

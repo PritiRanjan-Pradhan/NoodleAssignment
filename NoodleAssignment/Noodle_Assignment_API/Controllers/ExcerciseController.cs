@@ -94,13 +94,13 @@ namespace Noodle_Assignment_API.Controllers
 
         }
         [HttpPost("checkout")]
-        public async Task<string> Chekout(CheckoutModel checkoutModel)
+        public async Task Chekout(CheckoutModel checkoutModel)
         {
-            return await _checkoutService.ExecuteAsync(checkoutModel);
+             await _checkoutService.ExecuteAsync(checkoutModel);
         }
 
-        [HttpPost("myProfile")]
-        public async Task<string> MyProfile([FromBody] MeClientModel meClient)
+        [HttpPost("meservice")]
+        public async Task<string> MyProfile( MeClientModel meClient)
         {
             return await _meService.ExecuteAsync(meClient);
         }
@@ -127,7 +127,7 @@ namespace Noodle_Assignment_API.Controllers
             return _serchService.ExecuteAsync(productTypeKey);
         }
 
-        [HttpPost("getProductsSortById")]
+        [HttpPost("pagedquery")]
         public Task<string> GetProductsSortById()
         {
             return _pagedQuery.ExecuteAsync();

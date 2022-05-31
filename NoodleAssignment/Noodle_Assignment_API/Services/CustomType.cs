@@ -20,21 +20,21 @@ namespace Noodle_Assignment_API.Services
                 Name = customTypeModel.CustomField.CustomFieldName,
                 Required = customTypeModel.CustomField.Required,
                 Label = new LocalizedString { { "en", customTypeModel.CustomField.Label } },
-                Type = new CustomFieldStringType(){ Name = "String" }
+                Type = new CustomFieldStringType() { Name = "String" }
             };
             var customFieldDefination = new List<IFieldDefinition>() { customField };
             var typeDraft = new TypeDraft()
             {
-              
-                
-                Name =new LocalizedString { { "en", customTypeModel.TypeName } },
-                Key= customTypeModel.Key,
-                ResourceTypeIds =new List<IResourceTypeId> { IResourceTypeId.Customer },
-                Description =new LocalizedString { { "desc", customTypeModel.Description } },
-                FieldDefinitions=customFieldDefination,
-                
-                
-        };
+
+
+                Name = new LocalizedString { { "en", customTypeModel.TypeName } },
+                Key = customTypeModel.Key,
+                ResourceTypeIds = new List<IResourceTypeId> { IResourceTypeId.Customer },
+                Description = new LocalizedString { { "desc", customTypeModel.Description } },
+                FieldDefinitions = customFieldDefination,
+
+
+            };
             var customtype = await _client.WithApi()
                 .WithProjectKey(_projectKey)
                 .Types()
@@ -45,9 +45,9 @@ namespace Noodle_Assignment_API.Services
                 .WithProjectKey(_projectKey)
                 .Customers()
                 .Get()
-                .ExecuteAsync()
-                ;
-            foreach(var customer in customers.Results)
+                .ExecuteAsync();
+                
+            foreach (var customer in customers.Results)
             {
                 var customeField = new CustomerSetCustomTypeAction()
                 {
@@ -57,8 +57,8 @@ namespace Noodle_Assignment_API.Services
                 var customerUpdateAction = new CustomerUpdate()
                 {
                     Actions = new List<ICustomerUpdateAction>() { customeField },
-                    Version=customer.Version,
-                    
+                    Version = customer.Version,
+
                 };
 
                 var updatedCustomer = await _client.WithApi()
@@ -68,9 +68,9 @@ namespace Noodle_Assignment_API.Services
                     .Post(customerUpdateAction)
                     .ExecuteAsync();
             }
-          
 
-            throw new NotImplementedException();
+
+
         }
     }
 }

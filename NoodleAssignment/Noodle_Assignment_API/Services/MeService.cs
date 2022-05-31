@@ -17,8 +17,6 @@ namespace Noodle_Assignment_API.Services
         public async Task<string> ExecuteAsync(MeClientModel meClientModel)
         {
 
-           
-
             var configuration = _serviceProvider.GetService<IConfiguration>();
             var httpClientFactory = _serviceProvider.GetService<IHttpClientFactory>();
             var serializerService = _serviceProvider.GetService<SerializerService>();

@@ -58,7 +58,7 @@ namespace Noodle_Assignment_API.Services
 
             var lineItemDraftForAnnonymous = new LineItemDraft()
             {
-                Sku = cartMergeModel.SKU,
+                Sku = "M0E20000000DVNR",
                 SupplyChannel = new ChannelResourceIdentifier { Id = channel.Id },
                 Quantity = 1,
                 ExternalPrice = Money.FromDecimal(cartMergeModel.Currency, cartMergeModel.Price),
